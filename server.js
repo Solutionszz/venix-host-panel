@@ -14,6 +14,20 @@ const pool = new Pool({
     : false
 });
 
+async function iniciarBanco() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id BIGSERIAL PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      email VARCHAR(255) UNIQUE,
+      password_hash TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+
+  console.log("Tabela users pronta");
+}
+
 app.get("/", (req, res) => {
   res.json({
     name: "VENIX HOST API",
@@ -30,7 +44,7 @@ app.get("/health", async (req, res) => {
       message: "API e banco funcionando"
     });
   } catch (error) {
-    console.error("Falha ao verificar o banco:", error.message);
+    console.error(error.message);
     res.status(503).json({
       status: "error",
       message: "Banco de dados indisponível"
@@ -38,6 +52,13 @@ app.get("/health", async (req, res) => {
   }
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`VENIX HOST API rodando na porta ${PORT}`);
-});
+iniciarBanco()
+  .then(() => {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`VENIX HOST API rodando na porta ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Erro ao iniciar o banco:", error.message);
+    process.exit(1);
+  });
