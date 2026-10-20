@@ -3,51 +3,48 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#09090d">
 <title>VENIX HOST — Painel</title>
 <style>
 :root{--bg:#09090d;--panel:#111117;--panel2:#171720;--border:#272631;--purple:#9b5cff;--light:#c4a0ff;--text:#f5f2fa;--muted:#9995a8;--green:#45dda0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,Arial}
-button,input{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}
+button,input{font:inherit}button{cursor:pointer}
+button:disabled{opacity:.6}
 .btn{background:linear-gradient(135deg,#a66aff,#762fe0);border:0;border-radius:9px;color:white;padding:11px 15px;font-weight:750}
-.btn.secondary{background:var(--panel2);border:1px solid var(--border)}
+.secondary{background:var(--panel2)!important;border:1px solid var(--border)!important}
 .field{display:grid;gap:8px;margin:16px 0;color:#d7d2e1}
 .field input{background:#0b0b10;border:1px solid var(--border);padding:12px;color:white;border-radius:9px;width:100%;outline:none}
 .field input:focus{border-color:var(--purple)}
-.sub{color:var(--muted)}
+.sub{color:var(--muted);line-height:1.6}
 .auth-screen{min-height:100vh;display:grid;place-items:center;padding:20px}
 .auth-card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:25px;box-shadow:0 15px 60px #0005}
-.auth-brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:21px;margin-bottom:25px}
+.auth-brand,.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:21px}
+.auth-brand{margin-bottom:25px}
 .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#bc82ff,#6b28d9);display:grid;place-items:center}
 .auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0}
 .auth-tabs button{background:var(--panel2);border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:11px}
 .auth-tabs button.active{background:#291a3b;color:#e3ccff;border-color:#7045a1}
-.auth-error{display:none;background:#30171d;border:1px solid #74333e;color:#ffb9c0;padding:11px;border-radius:9px;line-height:1.5}
-.auth-success{display:none;background:#12271f;border:1px solid #285b45;color:#9df0c8;padding:11px;border-radius:9px;line-height:1.5}
+.message{display:none;padding:11px;border-radius:9px;margin:10px 0;line-height:1.5}
+.error{background:#30171d;border:1px solid #74333e;color:#ffb9c0}
+.success{background:#12271f;border:1px solid #285b45;color:#9df0c8}
 .auth-submit{width:100%;margin-top:8px}
 .auth-note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:18px}
-.app{display:none;min-height:100vh}
-.app.ready{display:flex}
+.app{display:none;min-height:100vh}.app.ready{display:flex}
 .sidebar{width:235px;background:#0d0d12;border-right:1px solid var(--border);padding:22px 14px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;padding:5px 8px 28px;font-weight:900;font-size:19px}
+.brand{padding:5px 8px 28px;font-size:19px}
 .label{font-size:10px;color:#777286;letter-spacing:1.6px;font-weight:800;padding:12px 10px}
 .nav{display:flex;gap:12px;width:100%;border:0;background:transparent;color:var(--muted);padding:12px;border-radius:10px;text-align:left;margin:2px 0}
 .nav:hover,.nav.active{background:#21172f;color:#d8baff}
-.nav span{width:20px}
-.sidebottom{margin-top:auto;border:1px solid var(--border);background:var(--panel);padding:13px;border-radius:12px}
-.sidebottom small{color:var(--muted)}
+.nav span{width:20px}.sidebottom{margin-top:auto;border:1px solid var(--border);background:var(--panel);padding:13px;border-radius:12px}.sidebottom small{color:var(--muted)}
 .main{margin-left:235px;width:calc(100% - 235px);min-width:0}
 .topbar{min-height:68px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:12px 30px;background:#0b0b10;gap:12px}
 .topright{display:flex;align-items:center;gap:12px}
 .avatar{width:33px;height:33px;border-radius:10px;background:#382254;color:#d7b6ff;display:grid;place-items:center;font-weight:800}
 .content{padding:30px;max-width:1400px;margin:auto}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}
-h1{font-size:25px;margin:0 0 7px}
-.sub{margin:0}
+h1{font-size:25px;margin:0 0 7px}h2{font-size:20px}h3{margin-top:0}
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:19px;min-width:0}
 .stat-top{display:flex;justify-content:space-between;color:var(--muted)}
@@ -56,21 +53,16 @@ h1{font-size:25px;margin:0 0 7px}
 .section-title{font-size:16px;font-weight:800;margin:27px 0 14px}
 .widegrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:15px}
 .cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}
-.cardhead h3{margin:0;font-size:15px}
 .notice{border:1px solid #59412b;background:#21190f;color:#e9c895;border-radius:10px;padding:12px;margin:14px 0;line-height:1.5}
-.page{display:none}
-.page.active{display:block}
+.page{display:none}.page.active{display:block}
 .empty{text-align:center;padding:35px 10px;color:var(--muted)}
 .botrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--border)}
 .boticon{width:40px;height:40px;border-radius:12px;background:#21172f;display:grid;place-items:center;font-size:19px}
-.botinfo{flex:1;min-width:0}
-.botinfo small{display:block;color:var(--muted);margin-top:5px}
+.botinfo{flex:1;min-width:0}.botinfo small{display:block;color:var(--muted);margin-top:5px}
 .botactions{display:flex;gap:6px}
 .iconbtn{background:var(--panel2);color:#d5cce3;border:1px solid var(--border);padding:8px;border-radius:8px}
 .progress{height:6px;background:#292632;border-radius:10px;overflow:hidden;margin:13px 0 8px}
 .progress span{display:block;height:100%;background:linear-gradient(90deg,#7434d0,#bb83ff)}
-.resource{margin:18px 0}
-.resource-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
 .plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .price{font-size:30px;font-weight:900;margin:20px 0}
 .plan ul{color:var(--muted);padding-left:18px;line-height:2.3;min-height:120px}
@@ -85,443 +77,304 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
 <body>
 
 <section class="auth-screen" id="auth-screen">
-  <div class="auth-card">
-    <div class="auth-brand">
-      <div class="logo">V</div>
-      <div>VENIX <span style="color:#ac73ff">HOST</span></div>
-    </div>
-
-    <h1 id="auth-title">Entrar na conta</h1>
-    <p class="sub" id="auth-description">Acesse seu painel de hospedagem.</p>
-
-    <div class="auth-tabs">
-      <button type="button" id="tab-login" class="active" onclick="setAuthMode('login')">Entrar</button>
-      <button type="button" id="tab-register" onclick="setAuthMode('register')">Criar conta</button>
-    </div>
-
-    <div class="auth-error" id="auth-error" role="alert"></div>
-    <div class="auth-success" id="auth-success" role="status"></div>
-
-    <form id="auth-form">
-      <div class="field" id="username-field" hidden>
-        <label for="auth-username">Nome de usuário</label>
-        <input id="auth-username" name="username" autocomplete="username" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" placeholder="Ex.: VenixUser">
-      </div>
-
-      <div class="field" id="email-field" hidden>
-        <label for="auth-email">Email</label>
-        <input id="auth-email" name="email" type="email" autocomplete="email" maxlength="255" placeholder="voce@email.com">
-      </div>
-
-      <div class="field">
-        <label id="login-label" for="auth-login">Usuário ou email</label>
-        <input id="auth-login" name="login" autocomplete="username" maxlength="255" required placeholder="Seu usuário ou email">
-      </div>
-
-      <div class="field">
-        <label for="auth-password">Senha</label>
-        <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required placeholder="Mínimo de 8 caracteres">
-      </div>
-
-      <button class="btn auth-submit" id="auth-submit" type="submit">Entrar</button>
-    </form>
-
-    <p class="auth-note">Sua senha é verificada pela API e armazenada no servidor como hash. Nunca compartilhe sua senha ou seu token.</p>
+<div class="auth-card">
+  <div class="auth-brand"><div class="logo">V</div><div>VENIX <span style="color:#ac73ff">HOST</span></div></div>
+  <h1 id="auth-title">Entrar na conta</h1>
+  <p class="sub" id="auth-description">Acesse seu painel de hospedagem.</p>
+  <div class="auth-tabs">
+    <button id="tab-login" class="active" type="button" onclick="setAuthMode('login')">Entrar</button>
+    <button id="tab-register" type="button" onclick="setAuthMode('register')">Criar conta</button>
   </div>
+  <div class="message error" id="auth-error" role="alert"></div>
+  <div class="message success" id="auth-success" role="status"></div>
+  <form id="auth-form">
+    <div class="field" id="username-field" hidden>
+      <label for="auth-username">Nome de usuário</label>
+      <input id="auth-username" autocomplete="username" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" placeholder="Ex.: VenixUser">
+    </div>
+    <div class="field" id="email-field" hidden>
+      <label for="auth-email">E-mail</label>
+      <input id="auth-email" type="email" autocomplete="email" maxlength="255" placeholder="voce@email.com">
+    </div>
+    <div class="field" id="login-field">
+      <label for="auth-login">Usuário ou e-mail</label>
+      <input id="auth-login" autocomplete="username" maxlength="255" required placeholder="Seu usuário ou e-mail">
+    </div>
+    <div class="field">
+      <label for="auth-password">Senha</label>
+      <input id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required placeholder="Mínimo de 8 caracteres">
+    </div>
+    <button class="btn auth-submit" id="auth-submit" type="submit">Entrar</button>
+  </form>
+  <p class="auth-note">Sua senha é protegida no servidor. Nunca compartilhe sua senha ou token.</p>
+</div>
 </section>
 
 <div class="app" id="app">
 <aside class="sidebar" id="sidebar">
-<div class="brand"><div class="logo">V</div><div>VENIX <span style="color:#ac73ff">HOST</span></div></div>
-<div class="label">PRINCIPAL</div>
-<button class="nav active" data-page="dashboard"><span>◈</span>Dashboard</button>
-<button class="nav" data-page="bots"><span>▣</span>Meus bots</button>
-<button class="nav" data-page="console"><span>⌘</span>Console</button>
-<div class="label">FINANCEIRO</div>
-<button class="nav" data-page="plans"><span>◇</span>Planos</button>
-<button class="nav" data-page="payments"><span>▤</span>Pagamentos</button>
-<div class="label">CONTA</div>
-<button class="nav" data-page="account"><span>◎</span>Minha conta</button>
-<button class="nav" data-page="settings"><span>⚙</span>Configurações</button>
-<div class="sidebottom"><b id="connection-label">Verificando API...</b><br><small>VENIX HOST · Painel beta</small></div>
+  <div class="brand"><div class="logo">V</div><div>VENIX <span style="color:#ac73ff">HOST</span></div></div>
+  <div class="label">PRINCIPAL</div>
+  <button class="nav active" data-page="dashboard"><span>◈</span>Dashboard</button>
+  <button class="nav" data-page="bots"><span>▣</span>Meus bots</button>
+  <button class="nav" data-page="console"><span>⌘</span>Console</button>
+  <div class="label">FINANCEIRO</div>
+  <button class="nav" data-page="plans"><span>◇</span>Planos</button>
+  <button class="nav" data-page="payments"><span>▤</span>Pagamentos</button>
+  <div class="label">CONTA</div>
+  <button class="nav" data-page="account"><span>◎</span>Minha conta</button>
+  <button class="nav" data-page="settings"><span>⚙</span>Configurações</button>
+  <div class="sidebottom"><b id="connection-label">Verificando API...</b><br><small>VENIX HOST · Painel beta</small></div>
 </aside>
 
 <main class="main">
 <header class="topbar">
-<div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button>VENIX HOST / <b id="crumb">Dashboard</b></div>
-<div class="topright">
-<span style="color:var(--muted)">BETA</span>
-<div class="avatar" id="avatar">V</div>
-<button class="btn secondary" id="logout-button" type="button">Sair</button>
-</div>
+  <div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button>VENIX HOST / <b id="crumb">Dashboard</b></div>
+  <div class="topright"><span style="color:var(--muted)">BETA</span><div class="avatar" id="avatar">V</div><button class="btn secondary" id="logout-button" type="button">Sair</button></div>
 </header>
-
 <div class="content">
 <section class="page active" id="page-dashboard">
-<div class="heading"><div><h1>Dashboard</h1><p class="sub">Bem-vindo à VENIX HOST, <b id="welcome-name">usuário</b>.</p></div><button class="btn" onclick="go('plans')">＋ Nova hospedagem</button></div>
-<div class="grid">
-<div class="card"><div class="stat-top">Hospedagens</div><div class="stat-num" id="stat-bots">0</div><div class="stat-note">Projetos de demonstração neste navegador</div></div>
-<div class="card"><div class="stat-top">Em execução</div><div class="stat-num">0</div><div class="stat-note">Execução real ainda não integrada</div></div>
-<div class="card"><div class="stat-top">Plano atual</div><div class="stat-num" style="font-size:22px">Gratuito</div><div class="stat-note">Ambiente inicial</div></div>
-<div class="card"><div class="stat-top">Status da API</div><div class="stat-num" id="api-status" style="font-size:22px">Verificando</div><div class="stat-note" id="api-message">Consultando API e banco...</div></div>
-</div>
-<div class="section-title">Visão geral</div>
-<div class="widegrid">
-<div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><button class="btn secondary" onclick="go('bots')">Ver todas ↗</button></div><div id="dashboard-bots" class="empty">Você ainda não adicionou bots.</div></div>
-<div class="card"><h3>Uso de recursos</h3><div class="resource"><div class="resource-label"><span>Memória RAM</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="resource"><div class="resource-label"><span>CPU</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="notice">Consumo real estará disponível após integrar o serviço de execução.</div></div>
-</div>
-<div class="section-title">Atividade recente</div><div class="card" id="activity">Painel carregado. Aguardando verificação da API.</div>
+  <div class="heading"><div><h1>Dashboard</h1><p class="sub">Bem-vindo à VENIX HOST, <b id="welcome-name">usuário</b>.</p></div><button class="btn" onclick="go('plans')">＋ Nova hospedagem</button></div>
+  <div class="grid">
+    <div class="card"><div class="stat-top">Hospedagens</div><div class="stat-num" id="stat-bots">0</div><div class="stat-note">Projetos de demonstração</div></div>
+    <div class="card"><div class="stat-top">Em execução</div><div class="stat-num">0</div><div class="stat-note">Execução real não integrada</div></div>
+    <div class="card"><div class="stat-top">Plano atual</div><div class="stat-num" style="font-size:22px">Gratuito</div><div class="stat-note">Ambiente inicial</div></div>
+    <div class="card"><div class="stat-top">Status da API</div><div class="stat-num" id="api-status" style="font-size:22px">Verificando</div><div class="stat-note" id="api-message">Consultando API e banco...</div></div>
+  </div>
+  <div class="section-title">Visão geral</div>
+  <div class="widegrid">
+    <div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><button class="btn secondary" onclick="go('bots')">Ver todas ↗</button></div><div id="dashboard-bots" class="empty">Você ainda não adicionou bots.</div></div>
+    <div class="card"><h3>Uso de recursos</h3><div class="resource"><div class="resource-label"><span>Memória RAM</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="resource"><div class="resource-label"><span>CPU</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="notice">Consumo real disponível após integrar execução.</div></div>
+  </div>
+  <div class="section-title">Atividade recente</div><div class="card" id="activity">Painel carregado.</div>
 </section>
 
 <section class="page" id="page-bots">
-<div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie seus projetos.</p></div><button class="btn" onclick="addBot()">＋ Adicionar bot</button></div>
-<div class="notice">Demonstração: os projetos ainda ficam apenas neste navegador. A execução real não está integrada.</div>
-<div class="card"><div class="cardhead"><h3>Seus projetos</h3><span id="bot-count">0 projetos</span></div><div id="bot-list" class="empty">Nenhum bot cadastrado.</div></div>
+  <div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie seus projetos.</p></div><button class="btn" onclick="addBot()">＋ Adicionar bot</button></div>
+  <div class="notice">Demonstração: projetos guardados apenas nesta sessão. Execução real ainda não integrada.</div>
+  <div class="card"><div class="cardhead"><h3>Seus projetos</h3><span id="bot-count">0 projetos</span></div><div id="bot-list" class="empty">Nenhum bot cadastrado.</div></div>
 </section>
 
 <section class="page" id="page-console">
-<div class="heading"><div><h1>Console</h1><p class="sub">Logs de atividade do painel.</p></div><button class="btn secondary" onclick="clearConsole()">Limpar console</button></div>
-<div class="notice">Este console ainda não recebe logs de processos reais.</div><div class="console" id="consolelog">[VENIX] Painel iniciado.</div>
+  <div class="heading"><div><h1>Console</h1><p class="sub">Logs de atividade.</p></div><button class="btn secondary" onclick="clearConsole()">Limpar console</button></div>
+  <div class="notice">O console ainda não recebe logs de processos reais.</div><div class="console" id="consolelog">[VENIX] Painel iniciado.</div>
 </section>
 
 <section class="page" id="page-plans">
-<div class="heading"><div><h1>Planos</h1><p class="sub">Opções de hospedagem.</p></div></div>
-<div class="notice">Valores demonstrativos. Nenhum pagamento será cobrado.</div>
-<div class="plan-grid">
-<div class="card plan"><h2>Starter</h2><p class="sub">Para começar.</p><div class="price">R$ 0</div><ul><li>Painel básico</li><li>Projeto de demonstração</li></ul><button class="btn secondary" onclick="requestPlan('Starter')">Selecionar plano</button></div>
-<div class="card plan"><h2>Pro</h2><p class="sub">Para projetos maiores.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn" onclick="requestPlan('Pro')">Solicitar informações</button></div>
-<div class="card plan"><h2>Ultra</h2><p class="sub">Para mais recursos.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn secondary" onclick="requestPlan('Ultra')">Solicitar informações</button></div>
-</div>
+  <div class="heading"><div><h1>Planos</h1><p class="sub">Opções de hospedagem.</p></div></div>
+  <div class="notice">Valores demonstrativos. Nenhum pagamento será cobrado.</div>
+  <div class="plan-grid">
+    <div class="card plan"><h2>Starter</h2><p class="sub">Para começar.</p><div class="price">R$ 0</div><ul><li>Painel básico</li><li>Projeto de demonstração</li></ul><button class="btn secondary" onclick="requestPlan('Starter')">Selecionar plano</button></div>
+    <div class="card plan"><h2>Pro</h2><p class="sub">Para projetos maiores.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn" onclick="requestPlan('Pro')">Solicitar informações</button></div>
+    <div class="card plan"><h2>Ultra</h2><p class="sub">Para mais recursos.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn secondary" onclick="requestPlan('Ultra')">Solicitar informações</button></div>
+  </div>
 </section>
 
-<section class="page" id="page-payments"><div class="heading"><div><h1>Pagamentos</h1><p class="sub">Pedidos e histórico financeiro.</p></div></div><div class="card empty">Pagamentos via Pix ainda não configurados.</div></section>
+<section class="page" id="page-payments">
+  <div class="heading"><div><h1>Pagamentos</h1><p class="sub">Pedidos e histórico financeiro.</p></div></div>
+  <div class="card empty">Pagamentos via Pix ainda não configurados.</div>
+</section>
 
 <section class="page" id="page-account">
-<div class="heading"><div><h1>Minha conta</h1><p class="sub">Perfil autenticado.</p></div></div>
-<div class="card"><h3 id="account-name">Usuário</h3><p class="sub" id="account-email">Email não disponível</p><p class="sub" id="account-created"></p></div>
+  <div class="heading"><div><h1>Minha conta</h1><p class="sub">Informações retornadas pela API.</p></div></div>
+  <div class="card">
+    <div class="avatar" id="account-avatar" style="width:55px;height:55px;font-size:22px;margin-bottom:16px">V</div>
+    <h3 id="account-name">Usuário</h3>
+    <p class="sub" id="account-email">E-mail ainda não carregado</p>
+    <p class="sub" id="account-id">ID da conta: indisponível</p>
+    <p class="sub" id="account-created"></p>
+    <button class="btn secondary" onclick="copyUsername()">Copiar usuário</button>
+    <div class="notice">Por segurança, a senha antiga nunca é exibida. Se você esquecer a senha, será necessário implementar um fluxo seguro de redefinição no servidor.</div>
+  </div>
 </section>
 
 <section class="page" id="page-settings">
-<div class="heading"><div><h1>Configurações</h1><p class="sub">Preferências locais.</p></div></div>
-<div class="card" style="max-width:600px"><h3>Aparência</h3><p class="sub">Tema preto e roxo neon.</p><div class="field"><label for="display-name">Nome exibido</label><input id="display-name" maxlength="40" placeholder="Seu nome"></div><button class="btn" onclick="saveName()">Salvar preferência</button></div>
+  <div class="heading"><div><h1>Configurações</h1><p class="sub">Preferências locais.</p></div></div>
+  <div class="card" style="max-width:600px"><h3>Aparência</h3><p class="sub">Tema preto e roxo neon.</p><div class="field"><label for="display-name">Nome exibido</label><input id="display-name" maxlength="40" placeholder="Seu nome"></div><button class="btn" onclick="saveName()">Salvar preferência</button></div>
 </section>
 </div>
 <footer>VENIX HOST © 2026 · Painel em desenvolvimento</footer>
 </main>
 </div>
-
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-const API_URL = "https://venix-host-panel.onrender.com";
-const titles = {
-  dashboard:"Dashboard", bots:"Meus bots", console:"Console",
-  plans:"Planos", payments:"Pagamentos", account:"Minha conta",
-  settings:"Configurações"
-};
+const API_URL="https://venix-host-panel.onrender.com";
+const titles={dashboard:"Dashboard",bots:"Meus bots",console:"Console",plans:"Planos",payments:"Pagamentos",account:"Minha conta",settings:"Configurações"};
+let bots=[],currentUser=null,authMode="login",authBusy=false;
+const $=id=>document.getElementById(id);
 
-let bots = [];
-let currentUser = null;
-let authMode = "login";
-let authBusy = false;
-
-const $ = id => document.getElementById(id);
-
-function setAuthMode(mode) {
-  authMode = mode;
-  const registering = mode === "register";
-
-  $("tab-login").classList.toggle("active", !registering);
-  $("tab-register").classList.toggle("active", registering);
-  $("auth-title").textContent = registering ? "Criar sua conta" : "Entrar na conta";
-  $("auth-description").textContent = registering
-    ? "Cadastre-se para acessar a VENIX HOST."
-    : "Acesse seu painel de hospedagem.";
-  $("username-field").hidden = !registering;
-  $("email-field").hidden = !registering;
-  $("auth-login").parentElement.hidden = registering;
-  $("login-label").textContent = "Usuário ou email";
-  $("auth-password").autocomplete = registering ? "new-password" : "current-password";
-  $("auth-submit").textContent = registering ? "Criar conta" : "Entrar";
-  $("auth-username").required = registering;
-  $("auth-email").required = registering;
-  $("auth-login").required = !registering;
+function setAuthMode(mode){
+  authMode=mode;
+  const registering=mode==="register";
+  $("tab-login").classList.toggle("active",!registering);
+  $("tab-register").classList.toggle("active",registering);
+  $("auth-title").textContent=registering?"Criar sua conta":"Entrar na conta";
+  $("auth-description").textContent=registering?"Cadastre-se para acessar a VENIX HOST.":"Acesse seu painel de hospedagem.";
+  $("username-field").hidden=!registering;
+  $("email-field").hidden=!registering;
+  $("login-field").hidden=registering;
+  $("auth-username").required=registering;
+  $("auth-email").required=registering;
+  $("auth-login").required=!registering;
+  $("auth-password").autocomplete=registering?"new-password":"current-password";
+  $("auth-submit").textContent=registering?"Criar conta":"Entrar";
   hideAuthMessages();
 }
+function showAuthError(message){$("auth-error").textContent=message;$("auth-error").style.display="block";$("auth-success").style.display="none";}
+function showAuthSuccess(message){$("auth-success").textContent=message;$("auth-success").style.display="block";$("auth-error").style.display="none";}
+function hideAuthMessages(){$("auth-error").style.display="none";$("auth-success").style.display="none";}
 
-function showAuthError(message) {
-  $("auth-error").textContent = message;
-  $("auth-error").style.display = "block";
-  $("auth-success").style.display = "none";
-}
-
-function showAuthSuccess(message) {
-  $("auth-success").textContent = message;
-  $("auth-success").style.display = "block";
-  $("auth-error").style.display = "none";
-}
-
-function hideAuthMessages() {
-  $("auth-error").style.display = "none";
-  $("auth-success").style.display = "none";
-}
-
-async function apiRequest(path, options = {}) {
-  const response = await fetch(API_URL + path, {
+async function apiRequest(path,options={}){
+  const response=await fetch(API_URL+path,{
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    }
+    headers:{"Content-Type":"application/json",...(options.headers||{})}
   });
-
   let data;
-  try {
-    data = await response.json();
-  } catch {
-    throw new Error("A API retornou uma resposta inválida.");
-  }
-
-  if (!response.ok) {
-    throw new Error(data.error || data.message || "Não foi possível concluir a operação.");
-  }
-
+  try{data=await response.json();}catch{throw new Error("A API retornou uma resposta inválida.");}
+  if(!response.ok)throw new Error(data.error||data.message||"Não foi possível concluir a operação.");
   return data;
 }
 
-function openPanel(user) {
-  currentUser = user;
-  $("auth-screen").style.display = "none";
+function openPanel(user){
+  currentUser=user||{};
+  const username=currentUser.username||"Usuário";
+  const email=currentUser.email||"E-mail não retornado pela API";
+  $("auth-screen").style.display="none";
   $("app").classList.add("ready");
-  $("welcome-name").textContent = user.username;
-  $("account-name").textContent = user.username;
-  $("account-email").textContent = user.email || "Email não disponível";
-  $("account-created").textContent = user.created_at
-    ? "Conta criada em " + new Date(user.created_at).toLocaleDateString("pt-BR")
-    : "";
-  $("avatar").textContent = user.username.slice(0, 1).toUpperCase();
-  $("display-name").value = user.username;
+  $("welcome-name").textContent=username;
+  $("account-name").textContent=username;
+  $("account-email").textContent=email;
+  $("account-id").textContent="ID da conta: "+(currentUser.id??"indisponível");
+  $("account-created").textContent=currentUser.created_at?"Conta criada em "+new Date(currentUser.created_at).toLocaleDateString("pt-BR"):"";
+  $("avatar").textContent=username.slice(0,1).toUpperCase();
+  $("account-avatar").textContent=username.slice(0,1).toUpperCase();
+  $("display-name").value=username;
   verificarAPI();
 }
-
-function showAuth() {
+function showAuth(){
   $("app").classList.remove("ready");
-  $("auth-screen").style.display = "grid";
-  currentUser = null;
+  $("auth-screen").style.display="grid";
+  currentUser=null;
 }
-
-$("auth-form").addEventListener("submit", async event => {
-  event.preventDefault();
-  if (authBusy) return;
-
-  hideAuthMessages();
-  authBusy = true;
-  $("auth-submit").disabled = true;
-  $("auth-submit").textContent = "Aguarde...";
-
-  try {
-    let result;
-
-    if (authMode === "register") {
-      const username = $("auth-username").value.trim();
-      const email = $("auth-email").value.trim();
-      const password = $("auth-password").value;
-
-      result = await apiRequest("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({ username, email, password })
-      });
-    } else {
-      const login = $("auth-login").value.trim();
-      const password = $("auth-password").value;
-
-      result = await apiRequest("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ login, password })
-      });
-    }
-
-    if (!result.token || !result.user) {
-      throw new Error("A API não retornou os dados de autenticação esperados.");
-    }
-
-    // Token mantido apenas nesta sessão do navegador.
-    sessionStorage.setItem("venix_token", result.token);
-    $("auth-form").reset();
-    showAuthSuccess(result.message || "Autenticação concluída.");
-    openPanel(result.user);
-    log(authMode === "register" ? "Conta criada e autenticada." : "Login realizado.");
-    notify("Bem-vindo à VENIX HOST, " + result.user.username + "!");
-  } catch (error) {
-    showAuthError(error.message || "Erro de conexão. Tente novamente.");
-  } finally {
-    authBusy = false;
-    $("auth-submit").disabled = false;
-    $("auth-submit").textContent = authMode === "register" ? "Criar conta" : "Entrar";
-  }
-});
-
-$("logout-button").addEventListener("click", () => {
-  sessionStorage.removeItem("venix_token");
-  showAuth();
-  setAuthMode("login");
-  $("auth-form").reset();
-  notify("Você saiu da sua conta.");
-});
-
-async function restoreSession() {
-  const token = sessionStorage.getItem("venix_token");
-
-  if (!token) {
-    showAuth();
-    return;
-  }
-
-  try {
-    const result = await apiRequest("/api/auth/me", {
-      headers: { Authorization: "Bearer " + token }
-    });
-
-    openPanel(result.user);
-  } catch {
-    sessionStorage.removeItem("venix_token");
-    showAuth();
-    showAuthError("Sua sessão expirou. Entre novamente.");
-  }
-}
-
-function go(page) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".nav").forEach(n =>
-    n.classList.toggle("active", n.dataset.page === page)
-  );
-
-  const target = $("page-" + page);
-  if (target) target.classList.add("active");
-  $("crumb").textContent = titles[page] || "Dashboard";
-  $("sidebar").classList.remove("open");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-document.querySelectorAll(".nav").forEach(n =>
-  n.addEventListener("click", () => go(n.dataset.page))
-);
-
-$("mobilemenu").addEventListener("click", () =>
-  $("sidebar").classList.toggle("open")
-);
-
-function notify(message) {
-  const t = $("toast");
-  t.textContent = message;
-  t.style.display = "block";
+function notify(message){
+  const t=$("toast");t.textContent=message;t.style.display="block";
   clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => t.style.display = "none", 3000);
+  window.toastTimer=setTimeout(()=>t.style.display="none",3000);
 }
-
-function log(message) {
-  const el = $("consolelog");
-  el.textContent += "\n" + new Date().toLocaleTimeString() + " [INFO] " + message;
+function log(message){
+  $("consolelog").textContent+="\n"+new Date().toLocaleTimeString()+" [INFO] "+message;
 }
-
-async function verificarAPI() {
-  try {
-    const data = await apiRequest("/health");
-    if (data.status !== "ok") throw new Error("API indisponível");
-
-    $("api-status").textContent = "Online";
-    $("api-status").style.color = "var(--green)";
-    $("api-message").textContent = "API e banco funcionando";
-    $("connection-label").textContent = "● API conectada";
-    $("activity").textContent = "Conexão confirmada com a API e o PostgreSQL.";
-  } catch {
-    $("api-status").textContent = "Offline";
-    $("api-status").style.color = "#ff6b75";
-    $("api-message").textContent = "Falha de conexão; confira o serviço";
-    $("connection-label").textContent = "● API desconectada";
-    $("activity").textContent = "Não foi possível confirmar a conexão com a API.";
+$("auth-form").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(authBusy)return;
+  hideAuthMessages();authBusy=true;
+  $("auth-submit").disabled=true;$("auth-submit").textContent="Aguarde...";
+  try{
+    let result;
+    if(authMode==="register"){
+      result=await apiRequest("/api/auth/register",{method:"POST",body:JSON.stringify({
+        username:$("auth-username").value.trim(),
+        email:$("auth-email").value.trim(),
+        password:$("auth-password").value
+      })});
+    }else{
+      result=await apiRequest("/api/auth/login",{method:"POST",body:JSON.stringify({
+        login:$("auth-login").value.trim(),
+        password:$("auth-password").value
+      })});
+    }
+    if(!result.token||!result.user)throw new Error("A API não retornou os dados de autenticação esperados.");
+    sessionStorage.setItem("venix_token",result.token);
+    $("auth-form").reset();
+    openPanel(result.user);
+    log(authMode==="register"?"Conta criada e autenticada.":"Login realizado.");
+    notify("Bem-vindo à VENIX HOST, "+(result.user.username||"usuário")+"!");
+  }catch(error){showAuthError(error.message||"Erro de conexão. Tente novamente.");}
+  finally{
+    authBusy=false;$("auth-submit").disabled=false;
+    $("auth-submit").textContent=authMode==="register"?"Criar conta":"Entrar";
+  }
+});
+$("logout-button").addEventListener("click",()=>{
+  sessionStorage.removeItem("venix_token");showAuth();setAuthMode("login");$("auth-form").reset();
+});
+async function restoreSession(){
+  const token=sessionStorage.getItem("venix_token");
+  if(!token){showAuth();return;}
+  try{
+    const result=await apiRequest("/api/auth/me",{headers:{Authorization:"Bearer "+token}});
+    if(!result.user)throw new Error("Dados da conta indisponíveis.");
+    openPanel(result.user);
+  }catch{
+    sessionStorage.removeItem("venix_token");showAuth();
+    showAuthError("Sua sessão expirou ou não pôde ser validada. Entre novamente.");
   }
 }
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[c]));
+function go(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+  const target=$("page-"+page);if(target)target.classList.add("active");
+  $("crumb").textContent=titles[page]||"Dashboard";
+  $("sidebar").classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});
 }
+document.querySelectorAll(".nav").forEach(n=>n.addEventListener("click",()=>go(n.dataset.page)));
+$("mobilemenu").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
 
-function addBot() {
-  const name = prompt("Nome do projeto/bot:");
-  if (!name || !name.trim()) return;
-  if (bots.length >= 10) {
-    notify("Limite demonstrativo atingido.");
-    return;
+async function verificarAPI(){
+  try{
+    const data=await apiRequest("/health");
+    if(data.status!=="ok")throw new Error("API indisponível");
+    $("api-status").textContent="Online";$("api-status").style.color="var(--green)";
+    $("api-message").textContent="API e banco funcionando";
+    $("connection-label").textContent="● API conectada";
+    $("activity").textContent="Conexão confirmada com a API e o PostgreSQL.";
+  }catch{
+    $("api-status").textContent="Offline";$("api-status").style.color="#ff6b75";
+    $("api-message").textContent="Falha de conexão; confira o serviço";
+    $("connection-label").textContent="● API desconectada";
+    $("activity").textContent="Não foi possível confirmar a conexão com a API.";
   }
-  bots.push({ id: Date.now(), name: name.trim().slice(0, 60), status: "Parado" });
-  renderBots();
-  log("Projeto demonstrativo adicionado: " + name.trim());
+}
+function copyUsername(){
+  const username=currentUser?.username;
+  if(!username){notify("Usuário não disponível.");return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(username).then(()=>notify("Usuário copiado!")).catch(()=>notify("Não foi possível copiar automaticamente."));
+  }else{notify("Seu usuário é: "+username);}
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function addBot(){
+  const name=prompt("Nome do projeto/bot:");
+  if(!name||!name.trim())return;
+  if(bots.length>=10){notify("Limite demonstrativo atingido.");return;}
+  bots.push({id:Date.now(),name:name.trim().slice(0,60),status:"Parado"});
+  renderBots();log("Projeto demonstrativo adicionado: "+name.trim());
   notify("Projeto adicionado apenas à demonstração.");
 }
-
-function actionBot(id, action) {
-  const bot = bots.find(b => b.id === id);
-  if (!bot) return;
-
-  if (action === "delete") {
-    if (!confirm("Remover " + bot.name + "?")) return;
-    bots = bots.filter(b => b.id !== id);
-  } else {
-    bot.status = action === "start" ? "Execução simulada" : "Parado";
+function actionBot(id,action){
+  const bot=bots.find(b=>b.id===id);if(!bot)return;
+  if(action==="delete"){
+    if(!confirm("Remover "+bot.name+"?"))return;
+    bots=bots.filter(b=>b.id!==id);
+  }else{
+    bot.status=action==="start"?"Execução simulada":"Parado";
     notify("Nenhum processo real foi iniciado.");
   }
-
   renderBots();
 }
-
-function renderBots() {
-  $("stat-bots").textContent = bots.length;
-  $("bot-count").textContent = bots.length + " projeto(s)";
-
-  const row = b => `<div class="botrow">
-    <div class="boticon">🤖</div>
-    <div class="botinfo"><b>${escapeHtml(b.name)}</b><small>${escapeHtml(b.status)}</small></div>
-    <div class="botactions">
-      <button class="iconbtn" onclick="actionBot(${b.id},'start')" aria-label="Iniciar">▶</button>
-      <button class="iconbtn" onclick="actionBot(${b.id},'stop')" aria-label="Parar">■</button>
-      <button class="iconbtn" onclick="actionBot(${b.id},'delete')" aria-label="Remover">✕</button>
-    </div>
-  </div>`;
-
-  $("bot-list").innerHTML = bots.length
-    ? bots.map(row).join("")
-    : '<div class="empty">Nenhum bot cadastrado.</div>';
-
-  $("dashboard-bots").innerHTML = bots.length
-    ? bots.slice(0, 3).map(row).join("")
-    : '<div class="empty">Você ainda não adicionou bots.</div>';
+function renderBots(){
+  $("stat-bots").textContent=bots.length;$("bot-count").textContent=bots.length+" projeto(s)";
+  const row=b=>`<div class="botrow"><div class="boticon">🤖</div><div class="botinfo"><b>${escapeHtml(b.name)}</b><small>${escapeHtml(b.status)}</small></div><div class="botactions"><button class="iconbtn" onclick="actionBot(${b.id},'start')">▶</button><button class="iconbtn" onclick="actionBot(${b.id},'stop')">■</button><button class="iconbtn" onclick="actionBot(${b.id},'delete')">✕</button></div></div>`;
+  $("bot-list").innerHTML=bots.length?bots.map(row).join(""):'<div class="empty">Nenhum bot cadastrado.</div>';
+  $("dashboard-bots").innerHTML=bots.length?bots.slice(0,3).map(row).join(""):'<div class="empty">Você ainda não adicionou bots.</div>';
 }
-
-function clearConsole() {
-  $("consolelog").textContent = "[INFO] Console limpo.";
-  notify("Console limpo.");
-}
-
-function requestPlan(plan) {
-  notify("Plano " + plan + " selecionado apenas para demonstração.");
-  log("Consulta do plano " + plan);
-}
-
-function saveName() {
-  const n = $("display-name").value.trim();
-  if (!n) {
-    notify("Digite um nome primeiro.");
-    return;
-  }
-
-  $("avatar").textContent = n.slice(0, 1).toUpperCase();
-  $("welcome-name").textContent = n;
+function clearConsole(){$("consolelog").textContent="[INFO] Console limpo.";notify("Console limpo.");}
+function requestPlan(plan){notify("Plano "+plan+" selecionado apenas para demonstração.");log("Consulta do plano "+plan);}
+function saveName(){
+  const n=$("display-name").value.trim();if(!n){notify("Digite um nome primeiro.");return;}
+  $("avatar").textContent=n.slice(0,1).toUpperCase();$("welcome-name").textContent=n;
   notify("Nome aplicado apenas nesta sessão.");
 }
-
 setAuthMode("login");
 restoreSession();
 </script>
