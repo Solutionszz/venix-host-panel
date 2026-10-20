@@ -5,6 +5,31 @@ const { Pool } = require("pg");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Permitir que o site da VENIX HOST acesse a API
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (origin === "https://solutionszz.github.io") {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 const pool = new Pool({
@@ -39,12 +64,14 @@ app.get("/", (req, res) => {
 app.get("/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
+
     res.json({
       status: "ok",
       message: "API e banco funcionando"
     });
   } catch (error) {
     console.error(error.message);
+
     res.status(503).json({
       status: "error",
       message: "Banco de dados indisponível"
