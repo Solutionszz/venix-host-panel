@@ -10,13 +10,12 @@
 :root{--bg:#09090d;--panel:#111117;--panel2:#171720;--border:#272631;--purple:#9b5cff;--light:#c4a0ff;--text:#f5f2fa;--muted:#9995a8;--green:#45dda0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,Arial}
-button,input{font:inherit}button{cursor:pointer}
-button:disabled{opacity:.6}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.6;cursor:wait}
 .btn{background:linear-gradient(135deg,#a66aff,#762fe0);border:0;border-radius:9px;color:white;padding:11px 15px;font-weight:750}
 .secondary{background:var(--panel2)!important;border:1px solid var(--border)!important}
 .field{display:grid;gap:8px;margin:16px 0;color:#d7d2e1}
-.field input{background:#0b0b10;border:1px solid var(--border);padding:12px;color:white;border-radius:9px;width:100%;outline:none}
-.field input:focus{border-color:var(--purple)}
+.field input,.field select{background:#0b0b10;border:1px solid var(--border);padding:12px;color:white;border-radius:9px;width:100%;outline:none}
+.field input:focus,.field select:focus{border-color:var(--purple)}
 .sub{color:var(--muted);line-height:1.6}
 .auth-screen{min-height:100vh;display:grid;place-items:center;padding:20px}
 .auth-card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:25px;box-shadow:0 15px 60px #0005}
@@ -57,9 +56,9 @@ h1{font-size:25px;margin:0 0 7px}h2{font-size:20px}h3{margin-top:0}
 .page{display:none}.page.active{display:block}
 .empty{text-align:center;padding:35px 10px;color:var(--muted)}
 .botrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--border)}
-.boticon{width:40px;height:40px;border-radius:12px;background:#21172f;display:grid;place-items:center;font-size:19px}
-.botinfo{flex:1;min-width:0}.botinfo small{display:block;color:var(--muted);margin-top:5px}
-.botactions{display:flex;gap:6px}
+.boticon{width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#21172f;display:grid;place-items:center;font-size:19px}
+.botinfo{flex:1;min-width:0;overflow-wrap:anywhere}.botinfo small{display:block;color:var(--muted);margin-top:5px}
+.botactions{display:flex;gap:6px;flex-wrap:wrap}
 .iconbtn{background:var(--panel2);color:#d5cce3;border:1px solid var(--border);padding:8px;border-radius:8px}
 .progress{height:6px;background:#292632;border-radius:10px;overflow:hidden;margin:13px 0 8px}
 .progress span{display:block;height:100%;background:linear-gradient(90deg,#7434d0,#bb83ff)}
@@ -71,7 +70,7 @@ h1{font-size:25px;margin:0 0 7px}h2{font-size:20px}h3{margin-top:0}
 .toast{position:fixed;bottom:22px;right:22px;max-width:calc(100% - 32px);background:#20172d;border:1px solid #6b4298;padding:14px 18px;border-radius:12px;display:none;z-index:20}
 footer{text-align:center;color:#666173;padding:25px;font-size:11px}
 @media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:22px}.plan-grid{grid-template-columns:1fr}}
-@media(max-width:650px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:250px}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.topbar{padding:12px 16px;min-height:60px}.mobilemenu{display:block}.content{padding:20px 14px}.heading{align-items:flex-start;flex-wrap:wrap}.widegrid{grid-template-columns:1fr}.card{padding:14px}.topright{gap:7px}}
+@media(max-width:650px){.sidebar{transform:translateX(-100%);transition:transform .2s;width:250px}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.topbar{padding:12px 16px;min-height:60px}.mobilemenu{display:block}.content{padding:20px 14px}.heading{align-items:flex-start;flex-wrap:wrap}.widegrid{grid-template-columns:1fr}.card{padding:14px}.topright{gap:7px}.botrow{flex-wrap:wrap}.botactions{width:100%;padding-left:52px}}
 </style>
 </head>
 <body>
@@ -133,29 +132,29 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
 </header>
 <div class="content">
 <section class="page active" id="page-dashboard">
-  <div class="heading"><div><h1>Dashboard</h1><p class="sub">Bem-vindo à VENIX HOST, <b id="welcome-name">usuário</b>.</p></div><button class="btn" onclick="go('plans')">＋ Nova hospedagem</button></div>
+  <div class="heading"><div><h1>Dashboard</h1><p class="sub">Bem-vindo à VENIX HOST, <b id="welcome-name">usuário</b>.</p></div><button class="btn" onclick="go('bots');addBot()">＋ Nova hospedagem</button></div>
   <div class="grid">
-    <div class="card"><div class="stat-top">Hospedagens</div><div class="stat-num" id="stat-bots">0</div><div class="stat-note">Projetos de demonstração</div></div>
-    <div class="card"><div class="stat-top">Em execução</div><div class="stat-num">0</div><div class="stat-note">Execução real não integrada</div></div>
+    <div class="card"><div class="stat-top">Hospedagens</div><div class="stat-num" id="stat-bots">0</div><div class="stat-note">Bots salvos na sua conta</div></div>
+    <div class="card"><div class="stat-top">Em execução</div><div class="stat-num" id="stat-running">0</div><div class="stat-note">Execução real não integrada</div></div>
     <div class="card"><div class="stat-top">Plano atual</div><div class="stat-num" style="font-size:22px">Gratuito</div><div class="stat-note">Ambiente inicial</div></div>
     <div class="card"><div class="stat-top">Status da API</div><div class="stat-num" id="api-status" style="font-size:22px">Verificando</div><div class="stat-note" id="api-message">Consultando API e banco...</div></div>
   </div>
   <div class="section-title">Visão geral</div>
   <div class="widegrid">
-    <div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><button class="btn secondary" onclick="go('bots')">Ver todas ↗</button></div><div id="dashboard-bots" class="empty">Você ainda não adicionou bots.</div></div>
-    <div class="card"><h3>Uso de recursos</h3><div class="resource"><div class="resource-label"><span>Memória RAM</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="resource"><div class="resource-label"><span>CPU</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="notice">Consumo real disponível após integrar execução.</div></div>
+    <div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><button class="btn secondary" onclick="go('bots')">Ver todas ↗</button></div><div id="dashboard-bots" class="empty">Carregando bots...</div></div>
+    <div class="card"><h3>Uso de recursos</h3><div><div class="stat-top"><span>Memória RAM</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div><div class="stat-top"><span>CPU</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div><div class="notice">Consumo real disponível após integrar execução.</div></div>
   </div>
   <div class="section-title">Atividade recente</div><div class="card" id="activity">Painel carregado.</div>
 </section>
 
 <section class="page" id="page-bots">
-  <div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie seus projetos.</p></div><button class="btn" onclick="addBot()">＋ Adicionar bot</button></div>
-  <div class="notice">Demonstração: projetos guardados apenas nesta sessão. Execução real ainda não integrada.</div>
-  <div class="card"><div class="cardhead"><h3>Seus projetos</h3><span id="bot-count">0 projetos</span></div><div id="bot-list" class="empty">Nenhum bot cadastrado.</div></div>
+  <div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie seus projetos salvos na sua conta.</p></div><button class="btn" id="add-bot-button" onclick="addBot()">＋ Adicionar bot</button></div>
+  <div class="notice">Seus projetos são salvos no banco de dados. Iniciar e parar processos ainda depende da integração de execução.</div>
+  <div class="card"><div class="cardhead"><h3>Seus projetos</h3><span id="bot-count">0 projetos</span></div><div id="bot-list" class="empty">Carregando bots...</div></div>
 </section>
 
 <section class="page" id="page-console">
-  <div class="heading"><div><h1>Console</h1><p class="sub">Logs de atividade.</p></div><button class="btn secondary" onclick="clearConsole()">Limpar console</button></div>
+  <div class="heading"><div><h1>Console</h1><p class="sub">Logs de atividade do painel.</p></div><button class="btn secondary" onclick="clearConsole()">Limpar console</button></div>
   <div class="notice">O console ainda não recebe logs de processos reais.</div><div class="console" id="consolelog">[VENIX] Painel iniciado.</div>
 </section>
 
@@ -163,7 +162,7 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
   <div class="heading"><div><h1>Planos</h1><p class="sub">Opções de hospedagem.</p></div></div>
   <div class="notice">Valores demonstrativos. Nenhum pagamento será cobrado.</div>
   <div class="plan-grid">
-    <div class="card plan"><h2>Starter</h2><p class="sub">Para começar.</p><div class="price">R$ 0</div><ul><li>Painel básico</li><li>Projeto de demonstração</li></ul><button class="btn secondary" onclick="requestPlan('Starter')">Selecionar plano</button></div>
+    <div class="card plan"><h2>Starter</h2><p class="sub">Para começar.</p><div class="price">R$ 0</div><ul><li>Painel básico</li><li>Cadastro de projetos</li></ul><button class="btn secondary" onclick="requestPlan('Starter')">Selecionar plano</button></div>
     <div class="card plan"><h2>Pro</h2><p class="sub">Para projetos maiores.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn" onclick="requestPlan('Pro')">Solicitar informações</button></div>
     <div class="card plan"><h2>Ultra</h2><p class="sub">Para mais recursos.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li></ul><button class="btn secondary" onclick="requestPlan('Ultra')">Solicitar informações</button></div>
   </div>
@@ -183,7 +182,7 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
     <p class="sub" id="account-id">ID da conta: indisponível</p>
     <p class="sub" id="account-created"></p>
     <button class="btn secondary" onclick="copyUsername()">Copiar usuário</button>
-    <div class="notice">Por segurança, a senha antiga nunca é exibida. Se você esquecer a senha, será necessário implementar um fluxo seguro de redefinição no servidor.</div>
+    <div class="notice">Por segurança, sua senha antiga nunca é exibida. A recuperação de senha ainda precisa ser implementada.</div>
   </div>
 </section>
 
@@ -200,7 +199,7 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
 <script>
 const API_URL="https://venix-host-panel.onrender.com";
 const titles={dashboard:"Dashboard",bots:"Meus bots",console:"Console",plans:"Planos",payments:"Pagamentos",account:"Minha conta",settings:"Configurações"};
-let bots=[],currentUser=null,authMode="login",authBusy=false;
+let bots=[],currentUser=null,authMode="login",authBusy=false,botsBusy=false;
 const $=id=>document.getElementById(id);
 
 function setAuthMode(mode){
@@ -225,10 +224,14 @@ function showAuthSuccess(message){$("auth-success").textContent=message;$("auth-
 function hideAuthMessages(){$("auth-error").style.display="none";$("auth-success").style.display="none";}
 
 async function apiRequest(path,options={}){
-  const response=await fetch(API_URL+path,{
-    ...options,
-    headers:{"Content-Type":"application/json",...(options.headers||{})}
-  });
+  const token=sessionStorage.getItem("venix_token");
+  const headers={"Content-Type":"application/json",...(token?{Authorization:"Bearer "+token}:{}),...(options.headers||{})};
+  let response;
+  try{
+    response=await fetch(API_URL+path,{...options,headers});
+  }catch{
+    throw new Error("Não foi possível conectar à API. Confira sua conexão e tente novamente.");
+  }
   let data;
   try{data=await response.json();}catch{throw new Error("A API retornou uma resposta inválida.");}
   if(!response.ok)throw new Error(data.error||data.message||"Não foi possível concluir a operação.");
@@ -250,20 +253,24 @@ function openPanel(user){
   $("account-avatar").textContent=username.slice(0,1).toUpperCase();
   $("display-name").value=username;
   verificarAPI();
+  loadBots();
 }
 function showAuth(){
   $("app").classList.remove("ready");
   $("auth-screen").style.display="grid";
   currentUser=null;
+  bots=[];
+  renderBots();
 }
 function notify(message){
   const t=$("toast");t.textContent=message;t.style.display="block";
   clearTimeout(window.toastTimer);
-  window.toastTimer=setTimeout(()=>t.style.display="none",3000);
+  window.toastTimer=setTimeout(()=>t.style.display="none",3500);
 }
 function log(message){
   $("consolelog").textContent+="\n"+new Date().toLocaleTimeString()+" [INFO] "+message;
 }
+
 $("auth-form").addEventListener("submit",async event=>{
   event.preventDefault();
   if(authBusy)return;
@@ -295,8 +302,11 @@ $("auth-form").addEventListener("submit",async event=>{
     $("auth-submit").textContent=authMode==="register"?"Criar conta":"Entrar";
   }
 });
+
 $("logout-button").addEventListener("click",()=>{
-  sessionStorage.removeItem("venix_token");showAuth();setAuthMode("login");$("auth-form").reset();
+  sessionStorage.removeItem("venix_token");
+  showAuth();setAuthMode("login");$("auth-form").reset();
+  log("Sessão encerrada.");
 });
 async function restoreSession(){
   const token=sessionStorage.getItem("venix_token");
@@ -315,7 +325,9 @@ function go(page){
   document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
   const target=$("page-"+page);if(target)target.classList.add("active");
   $("crumb").textContent=titles[page]||"Dashboard";
-  $("sidebar").classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});
+  $("sidebar").classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(page==="bots")loadBots();
 }
 document.querySelectorAll(".nav").forEach(n=>n.addEventListener("click",()=>go(n.dataset.page)));
 $("mobilemenu").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
@@ -335,6 +347,139 @@ async function verificarAPI(){
     $("activity").textContent="Não foi possível confirmar a conexão com a API.";
   }
 }
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function botStatus(status){
+  const labels={stopped:"Parado",running:"Em execução",starting:"Iniciando",stopping:"Parando"};
+  return labels[String(status||"stopped").toLowerCase()]||String(status||"Parado");
+}
+
+async function loadBots(){
+  if(!sessionStorage.getItem("venix_token"))return;
+  if(botsBusy)return;
+  botsBusy=true;
+  $("bot-list").innerHTML='<div class="empty">Carregando bots...</div>';
+  $("dashboard-bots").innerHTML='<div class="empty">Carregando bots...</div>';
+  try{
+    const result=await apiRequest("/api/bots");
+    bots=Array.isArray(result)?result:(Array.isArray(result.bots)?result.bots:[]);
+    renderBots();
+  }catch(error){
+    $("bot-list").innerHTML='<div class="empty">Não foi possível carregar seus bots.<br>'+escapeHtml(error.message)+'</div>';
+    $("dashboard-bots").innerHTML='<div class="empty">Falha ao carregar os projetos.</div>';
+    notify(error.message);
+  }finally{botsBusy=false;}
+}
+
+async function addBot(){
+  if(!currentUser){notify("Entre na sua conta primeiro.");return;}
+  const name=prompt("Nome do projeto/bot:");
+  if(name===null||!name.trim())return;
+  const cleanName=name.trim();
+  if(cleanName.length>50){notify("O nome pode ter no máximo 50 caracteres.");return;}
+  const button=$("add-bot-button");
+  button.disabled=true;
+  try{
+    const result=await apiRequest("/api/bots",{
+      method:"POST",
+      body:JSON.stringify({name:cleanName,runtime:"nodejs"})
+    });
+    const created=result.bot||result;
+    if(created&&created.id!=null){
+      bots=[created,...bots.filter(b=>String(b.id)!==String(created.id))];
+      renderBots();
+    }else{
+      await loadBots();
+    }
+    log("Projeto cadastrado no banco: "+cleanName);
+    notify("Bot cadastrado e salvo na sua conta!");
+  }catch(error){notify(error.message);}
+  finally{button.disabled=false;}
+}
+
+async function renameBot(id){
+  const bot=bots.find(b=>String(b.id)===String(id));
+  if(!bot)return;
+  const name=prompt("Novo nome para o bot:",bot.name);
+  if(name===null||!name.trim())return;
+  const cleanName=name.trim();
+  if(cleanName.length>50){notify("O nome pode ter no máximo 50 caracteres.");return;}
+  try{
+    const result=await apiRequest("/api/bots/"+encodeURIComponent(id),{
+      method:"PATCH",body:JSON.stringify({name:cleanName})
+    });
+    const updated=result.bot||result;
+    bots=bots.map(b=>String(b.id)===String(id)?{...b,...updated,name:updated.name||cleanName}:b);
+    renderBots();
+    log("Projeto renomeado: "+cleanName);
+    notify("Nome do bot atualizado!");
+  }catch(error){notify(error.message);}
+}
+
+async function actionBot(id,action){
+  const bot=bots.find(b=>String(b.id)===String(id));
+  if(!bot)return;
+
+  if(action==="delete"){
+    if(!confirm("Excluir definitivamente o projeto "+bot.name+" da sua conta?"))return;
+    try{
+      await apiRequest("/api/bots/"+encodeURIComponent(id),{method:"DELETE"});
+      bots=bots.filter(b=>String(b.id)!==String(id));
+      renderBots();
+      log("Projeto excluído do banco: "+bot.name);
+      notify("Bot excluído da sua conta.");
+    }catch(error){notify(error.message);}
+    return;
+  }
+
+  if(action==="rename"){
+    await renameBot(id);
+    return;
+  }
+
+  const endpoint=action==="start"?"start":"stop";
+  try{
+    await apiRequest("/api/bots/"+encodeURIComponent(id)+"/"+endpoint,{method:"POST"});
+    await loadBots();
+    notify(action==="start"?"Solicitação de início enviada.":"Solicitação de parada enviada.");
+  }catch(error){
+    if(/503|execução|ambiente|integrado|indisponível/i.test(error.message)){
+      notify("Cadastro funcionando; execução real ainda não está integrada.");
+    }else{
+      notify(error.message);
+    }
+    log("Ação "+endpoint+" não concluída para "+bot.name+": "+error.message);
+  }
+}
+
+function renderBots(){
+  $("stat-bots").textContent=bots.length;
+  $("bot-count").textContent=bots.length+" projeto(s)";
+  $("stat-running").textContent=bots.filter(b=>String(b.status).toLowerCase()==="running").length;
+
+  const row=b=>{
+    const id=JSON.stringify(String(b.id));
+    const status=botStatus(b.status);
+    return `<div class="botrow">
+      <div class="boticon">🤖</div>
+      <div class="botinfo"><b>${escapeHtml(b.name)}</b><small>${escapeHtml(status)} · ${escapeHtml(b.runtime||"nodejs")}</small></div>
+      <div class="botactions">
+        <button class="iconbtn" title="Iniciar" onclick="actionBot(${id},'start')">▶</button>
+        <button class="iconbtn" title="Parar" onclick="actionBot(${id},'stop')">■</button>
+        <button class="iconbtn" title="Renomear" onclick="actionBot(${id},'rename')">✎</button>
+        <button class="iconbtn" title="Excluir" onclick="actionBot(${id},'delete')">✕</button>
+      </div>
+    </div>`;
+  };
+
+  $("bot-list").innerHTML=bots.length?bots.map(row).join(""):'<div class="empty">Nenhum bot cadastrado.<br>Toque em “Adicionar bot” para criar seu primeiro projeto.</div>';
+  $("dashboard-bots").innerHTML=bots.length?bots.slice(0,3).map(row).join(""):'<div class="empty">Você ainda não adicionou bots.</div>';
+}
+
+function clearConsole(){$("consolelog").textContent="[INFO] Console limpo.";notify("Console limpo.");}
+function requestPlan(plan){notify("Plano "+plan+" selecionado apenas para demonstração.");log("Consulta do plano "+plan);}
 function copyUsername(){
   const username=currentUser?.username;
   if(!username){notify("Usuário não disponível.");return;}
@@ -342,39 +487,14 @@ function copyUsername(){
     navigator.clipboard.writeText(username).then(()=>notify("Usuário copiado!")).catch(()=>notify("Não foi possível copiar automaticamente."));
   }else{notify("Seu usuário é: "+username);}
 }
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function addBot(){
-  const name=prompt("Nome do projeto/bot:");
-  if(!name||!name.trim())return;
-  if(bots.length>=10){notify("Limite demonstrativo atingido.");return;}
-  bots.push({id:Date.now(),name:name.trim().slice(0,60),status:"Parado"});
-  renderBots();log("Projeto demonstrativo adicionado: "+name.trim());
-  notify("Projeto adicionado apenas à demonstração.");
-}
-function actionBot(id,action){
-  const bot=bots.find(b=>b.id===id);if(!bot)return;
-  if(action==="delete"){
-    if(!confirm("Remover "+bot.name+"?"))return;
-    bots=bots.filter(b=>b.id!==id);
-  }else{
-    bot.status=action==="start"?"Execução simulada":"Parado";
-    notify("Nenhum processo real foi iniciado.");
-  }
-  renderBots();
-}
-function renderBots(){
-  $("stat-bots").textContent=bots.length;$("bot-count").textContent=bots.length+" projeto(s)";
-  const row=b=>`<div class="botrow"><div class="boticon">🤖</div><div class="botinfo"><b>${escapeHtml(b.name)}</b><small>${escapeHtml(b.status)}</small></div><div class="botactions"><button class="iconbtn" onclick="actionBot(${b.id},'start')">▶</button><button class="iconbtn" onclick="actionBot(${b.id},'stop')">■</button><button class="iconbtn" onclick="actionBot(${b.id},'delete')">✕</button></div></div>`;
-  $("bot-list").innerHTML=bots.length?bots.map(row).join(""):'<div class="empty">Nenhum bot cadastrado.</div>';
-  $("dashboard-bots").innerHTML=bots.length?bots.slice(0,3).map(row).join(""):'<div class="empty">Você ainda não adicionou bots.</div>';
-}
-function clearConsole(){$("consolelog").textContent="[INFO] Console limpo.";notify("Console limpo.");}
-function requestPlan(plan){notify("Plano "+plan+" selecionado apenas para demonstração.");log("Consulta do plano "+plan);}
 function saveName(){
-  const n=$("display-name").value.trim();if(!n){notify("Digite um nome primeiro.");return;}
-  $("avatar").textContent=n.slice(0,1).toUpperCase();$("welcome-name").textContent=n;
+  const n=$("display-name").value.trim();
+  if(!n){notify("Digite um nome primeiro.");return;}
+  $("avatar").textContent=n.slice(0,1).toUpperCase();
+  $("welcome-name").textContent=n;
   notify("Nome aplicado apenas nesta sessão.");
 }
+
 setAuthMode("login");
 restoreSession();
 </script>
