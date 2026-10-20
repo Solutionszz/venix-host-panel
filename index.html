@@ -1,1 +1,64 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VENIX HOST</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090910;color:#f5f0ff;font:15px Arial,sans-serif}
+header{padding:22px;border-bottom:1px solid #29243b;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:bold;letter-spacing:2px;color:#b394ff}
+.logo span{color:white}
+.pill{font-size:11px;border:1px solid #6545a5;padding:7px 10px;border-radius:20px;color:#c5aaff}
+main{max-width:1000px;margin:auto;padding:24px 16px}
+.tag{color:#a980ff;font-size:11px;letter-spacing:3px;font-weight:bold}
+h1{font-size:32px;margin:12px 0}
+p{color:#aaa5bd;line-height:1.6}
+.hero{padding:28px 22px;border:1px solid #3b2a5b;border-radius:18px;background:radial-gradient(ellipse at top right,#44216d 0%,#171020 45%,#11111a 100%)}
+.btn{display:inline-block;border:0;border-radius:9px;padding:12px 17px;background:#9564ff;color:white;font-weight:bold;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:20px}
+.card{padding:18px;border:1px solid #29263b;background:#12121c;border-radius:14px}
+.icon{font-size:24px}
+h2{font-size:16px;margin:14px 0 8px}
+.value{font-size:23px;font-weight:bold;margin-top:12px}
+.small{font-size:12px}
+.green{color:#49e5a4}
+footer{text-align:center;color:#716c83;padding:35px 10px;font-size:12px}
+@media(min-width:650px){h1{font-size:43px}.hero{padding:45px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">V<span>ENIX</span></div>
+  <div class="pill">HOSTING PLATFORM</div>
+</header>
+<main>
+  <section class="hero">
+    <div class="tag">SUA NOVA CENTRAL DE BOTS</div>
+    <h1>Seus bots.<br>Seu controle.</h1>
+    <p>Uma plataforma moderna para organizar e gerenciar seus bots Discord.</p>
+    <button class="btn" onclick="document.getElementById('painel').scrollIntoView({behavior:'smooth'})">Conhecer o painel ↓</button>
+  </section>
+  <div class="tag" style="margin-top:30px">DASHBOARD</div>
+  <h2 id="painel" style="font-size:22px">Visão geral</h2>
+  <p>Prévia do painel de gerenciamento VENIX HOST.</p>
+  <section class="grid">
+    <div class="card"><div class="icon">🤖</div><h2>Bots cadastrados</h2><div class="value">02</div><p class="small">Dados de demonstração</p></div>
+    <div class="card"><div class="icon">⚡</div><h2>Status</h2><div class="value green">Online</div><p class="small">Estado visual de exemplo</p></div>
+    <div class="card"><div class="icon">◈</div><h2>CPU</h2><div class="value">--</div><p class="small">Servidor não conectado</p></div>
+    <div class="card"><div class="icon">▤</div><h2>Memória RAM</h2><div class="value">--</div><p class="small">Servidor não conectado</p></div>
+  </section>
+  <div class="tag" style="margin-top:30px">RECURSOS</div>
+  <section class="grid">
+    <div class="card"><div class="icon">▶</div><h2>Gerenciamento</h2><p class="small">Estrutura preparada para controles de bots.</p></div>
+    <div class="card"><div class="icon">⌘</div><h2>Console</h2><p class="small">Área planejada para acompanhar logs.</p></div>
+    <div class="card"><div class="icon">💎</div><h2>Planos</h2><p class="small">Estrutura para planos Free e Premium.</p></div>
+    <div class="card"><div class="icon">🔒</div><h2>Segurança</h2><p class="small">Backend seguro será implementado depois.</p></div>
+  </section>
+</main>
+<footer>VENIX HOST © 2026 · FEITO PARA CRESCER</footer>
+</body>
+</html>
+ 
