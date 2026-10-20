@@ -3,62 +3,224 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VENIX HOST</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09090d">
+<title>VENIX HOST — Dashboard</title>
 <style>
+:root {
+  --bg:#09090d; --panel:#111117; --panel2:#171720;
+  --border:#272631; --purple:#9b5cff; --light:#c4a0ff;
+  --text:#f5f2fa; --muted:#9995a8; --green:#45dda0;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#090910;color:#f5f0ff;font:15px Arial,sans-serif}
-header{padding:22px;border-bottom:1px solid #29243b;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:22px;font-weight:bold;letter-spacing:2px;color:#b394ff}
-.logo span{color:white}
-.pill{font-size:11px;border:1px solid #6545a5;padding:7px 10px;border-radius:20px;color:#c5aaff}
-main{max-width:1000px;margin:auto;padding:24px 16px}
-.tag{color:#a980ff;font-size:11px;letter-spacing:3px;font-weight:bold}
-h1{font-size:32px;margin:12px 0}
-p{color:#aaa5bd;line-height:1.6}
-.hero{padding:28px 22px;border:1px solid #3b2a5b;border-radius:18px;background:radial-gradient(ellipse at top right,#44216d 0%,#171020 45%,#11111a 100%)}
-.btn{display:inline-block;border:0;border-radius:9px;padding:12px 17px;background:#9564ff;color:white;font-weight:bold;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:20px}
-.card{padding:18px;border:1px solid #29263b;background:#12121c;border-radius:14px}
-.icon{font-size:24px}
-h2{font-size:16px;margin:14px 0 8px}
-.value{font-size:23px;font-weight:bold;margin-top:12px}
-.small{font-size:12px}
-.green{color:#49e5a4}
-footer{text-align:center;color:#716c83;padding:35px 10px;font-size:12px}
-@media(min-width:650px){h1{font-size:43px}.hero{padding:45px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,system-ui,Arial}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:235px;background:#0d0d12;border-right:1px solid var(--border);padding:22px 14px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;padding:5px 8px 28px;font-weight:900;font-size:19px;letter-spacing:1px}
+.logo{width:35px;height:35px;border-radius:11px;background:linear-gradient(135deg,#bc82ff,#6b28d9);display:grid;place-items:center;color:white;font-weight:900;box-shadow:0 0 24px #9b5cff44}
+.label{font-size:10px;color:#777286;letter-spacing:1.6px;font-weight:800;padding:12px 10px}
+.nav{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;color:var(--muted);padding:12px;border-radius:10px;text-align:left;margin:2px 0}
+.nav:hover,.nav.active{background:#21172f;color:#d8baff}
+.nav.active{box-shadow:inset 3px 0 var(--purple)}
+.nav span{font-size:17px;width:20px;text-align:center}
+.sidebottom{margin-top:auto;border:1px solid var(--border);background:var(--panel);padding:13px;border-radius:12px}
+.sidebottom small{color:var(--muted)}
+.main{margin-left:235px;width:calc(100% - 235px);min-width:0}
+.topbar{height:68px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#0b0b10}
+.breadcrumb{color:var(--muted)}.breadcrumb b{color:white}
+.topright{display:flex;align-items:center;gap:12px}
+.avatar{width:33px;height:33px;border-radius:10px;background:#382254;color:#d7b6ff;display:grid;place-items:center;font-weight:800}
+.content{padding:30px;max-width:1400px;margin:auto}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}
+h1{font-size:25px;margin:0 0 7px;letter-spacing:-.7px}
+.sub{color:var(--muted);margin:0}
+.btn{background:linear-gradient(135deg,#a66aff,#762fe0);border:0;border-radius:9px;color:white;padding:11px 15px;font-weight:750;box-shadow:0 5px 18px #8138e526}
+.btn:hover{filter:brightness(1.12)}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border);box-shadow:none}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:19px;min-width:0}
+.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.stat-icon{width:35px;height:35px;border-radius:10px;background:#291a3b;display:grid;place-items:center;color:var(--light);font-size:17px}
+.stat-num{font-size:29px;font-weight:800;margin:17px 0 5px}
+.stat-note{font-size:12px;color:var(--muted)}
+.green{color:var(--green)}.purple{color:var(--light)}
+.section-title{font-size:16px;font-weight:800;margin:27px 0 14px}
+.widegrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:15px}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}
+.cardhead h3{margin:0;font-size:15px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:#123024;color:#70eab1;border:1px solid #20513a;border-radius:20px;padding:5px 9px;font-size:11px}
+.dot{width:6px;height:6px;background:currentColor;border-radius:50%}
+.botrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--border)}
+.boticon{width:40px;height:40px;flex-shrink:0;border-radius:12px;background:#21172f;display:grid;place-items:center;font-size:19px}
+.botinfo{flex:1;min-width:0}.botinfo b{display:block;margin-bottom:5px}.botinfo small{color:var(--muted)}
+.botactions{display:flex;gap:6px}
+.iconbtn{background:var(--panel2);color:#d5cce3;border:1px solid var(--border);padding:8px;border-radius:8px}
+.iconbtn:hover{border-color:var(--purple)}
+.progress{height:6px;background:#292632;border-radius:10px;overflow:hidden;margin:13px 0 8px}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#7434d0,#bb83ff);border-radius:10px}
+.resource{margin:18px 0}.resource-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.activity{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity:last-child{border:0}.activity .bubble{width:30px;height:30px;border-radius:9px;background:#20182d;display:grid;place-items:center}
+.activity small{display:block;color:var(--muted);margin-top:5px}
+.page{display:none}.page.active{display:block}
+.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:14px 10px;border-bottom:1px solid var(--border)}.table th{font-size:11px;color:var(--muted);font-weight:700}
+.empty{text-align:center;padding:35px 10px;color:var(--muted)}
+.plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.price{font-size:30px;font-weight:900;margin:20px 0}.price small{font-size:12px;color:var(--muted);font-weight:400}
+.plan ul{color:var(--muted);padding-left:18px;line-height:2.3;min-height:120px}
+.field{display:grid;gap:8px;margin:17px 0;color:#d7d2e1}.field input{background:#0b0b10;border:1px solid var(--border);padding:12px;color:white;border-radius:9px;width:100%}
+.console{background:#07070a;border:1px solid var(--border);padding:18px;border-radius:12px;font:12px/2 monospace;color:#b5f4d4;min-height:220px;overflow:auto}
+.notice{border:1px solid #59412b;background:#21190f;color:#e9c895;border-radius:10px;padding:12px;margin:14px 0;line-height:1.5}
+.mobilemenu{display:none;background:transparent;border:0;color:white;font-size:22px}
+.toast{position:fixed;bottom:22px;right:22px;max-width:calc(100% - 32px);background:#20172d;border:1px solid #6b4298;padding:14px 18px;border-radius:12px;display:none;z-index:20;box-shadow:0 10px 40px #0008}
+footer{text-align:center;color:#666173;padding:25px;font-size:11px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:22px}.plan-grid{grid-template-columns:1fr}}
+@media(max-width:650px){
+ .sidebar{transform:translateX(-100%);transition:transform .2s;width:250px;box-shadow:15px 0 40px #0007}
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-left:0;width:100%}.topbar{padding:0 16px;height:60px}.mobilemenu{display:block}
+ .content{padding:20px 14px}.heading{align-items:flex-start;flex-wrap:wrap}.heading h1{font-size:23px}
+ .grid{gap:9px}.card{padding:14px}.stat-num{font-size:25px}.widegrid{grid-template-columns:1fr}
+ .botrow{flex-wrap:wrap}.botactions{margin-left:auto}.table th,.table td{padding:11px 6px;font-size:12px}
+}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">V<span>ENIX</span></div>
-  <div class="pill">HOSTING PLATFORM</div>
-</header>
-<main>
-  <section class="hero">
-    <div class="tag">SUA NOVA CENTRAL DE BOTS</div>
-    <h1>Seus bots.<br>Seu controle.</h1>
-    <p>Uma plataforma moderna para organizar e gerenciar seus bots Discord.</p>
-    <button class="btn" onclick="document.getElementById('painel').scrollIntoView({behavior:'smooth'})">Conhecer o painel ↓</button>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+ <div class="brand"><div class="logo">V</div><div>VENIX<span style="color:#ac73ff"> HOST</span></div></div>
+ <div class="label">PRINCIPAL</div>
+ <button class="nav active" data-page="dashboard"><span>◈</span> Dashboard</button>
+ <button class="nav" data-page="bots"><span>▣</span> Meus bots</button>
+ <button class="nav" data-page="console"><span>⌘</span> Console</button>
+ <div class="label">FINANCEIRO</div>
+ <button class="nav" data-page="plans"><span>◇</span> Planos</button>
+ <button class="nav" data-page="payments"><span>▤</span> Pagamentos</button>
+ <div class="label">CONTA</div>
+ <button class="nav" data-page="account"><span>◎</span> Minha conta</button>
+ <button class="nav" data-page="settings"><span>⚙</span> Configurações</button>
+ <div class="sidebottom"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="dot green"></span><b style="font-size:12px">API conectada</b></div><small>VENIX HOST · Painel beta</small></div>
+</aside>
+<main class="main">
+ <header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px"><button class="mobilemenu" id="mobilemenu">☰</button><div class="breadcrumb">VENIX HOST <span style="padding:0 7px">/</span><b id="crumb">Dashboard</b></div></div>
+  <div class="topright"><span style="color:var(--muted);font-size:12px">BETA</span><div class="avatar">V</div></div>
+ </header>
+ <div class="content">
+  <section class="page active" id="page-dashboard">
+   <div class="heading"><div><h1>Dashboard</h1><p class="sub">Bem-vindo ao seu painel de hospedagem.</p></div><button class="btn" onclick="go('plans')">＋ Nova hospedagem</button></div>
+   <div class="grid">
+    <div class="card"><div class="stat-top">Hospedagens <span class="stat-icon">▣</span></div><div class="stat-num" id="stat-bots">0</div><div class="stat-note">Bots cadastrados neste painel</div></div>
+    <div class="card"><div class="stat-top">Em execução <span class="stat-icon">▶</span></div><div class="stat-num">0</div><div class="stat-note">Nenhum processo real conectado</div></div>
+    <div class="card"><div class="stat-top">Plano atual <span class="stat-icon">◇</span></div><div class="stat-num" style="font-size:23px">Gratuito</div><div class="stat-note">Ambiente de demonstração</div></div>
+    <div class="card"><div class="stat-top">Status da API <span class="stat-icon">⌁</span></div><div class="stat-num" style="font-size:23px;color:var(--green)">Online</div><div class="stat-note">Verificação local do painel</div></div>
+   </div>
+   <div class="section-title">Visão geral</div>
+   <div class="widegrid">
+    <div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><button class="btn secondary" onclick="go('bots')">Ver todas ↗</button></div>
+     <div id="dashboard-bots"><div class="empty">▣<p>Você ainda não adicionou bots.</p><button class="btn" onclick="go('plans')">Conhecer planos</button></div></div>
+    </div>
+    <div class="card"><div class="cardhead"><h3>Uso de recursos</h3><span class="purple">Beta</span></div>
+     <div class="resource"><div class="resource-label"><span>Memória RAM</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div>
+     <div class="resource"><div class="resource-label"><span>CPU</span><span>—</span></div><div class="progress"><span style="width:0%"></span></div></div>
+     <div class="notice">Os dados de consumo aparecerão quando o serviço real de hospedagem estiver integrado.</div>
+    </div>
+   </div>
+   <div class="section-title">Atividade recente</div>
+   <div class="card" id="activity"><div class="activity"><div class="bubble">✓</div><div>Painel inicializado<small>Interface carregada neste dispositivo</small></div></div><div class="activity"><div class="bubble">◇</div><div>Backend preparado<small>A API e o PostgreSQL foram configurados separadamente</small></div></div></div>
   </section>
-  <div class="tag" style="margin-top:30px">DASHBOARD</div>
-  <h2 id="painel" style="font-size:22px">Visão geral</h2>
-  <p>Prévia do painel de gerenciamento VENIX HOST.</p>
-  <section class="grid">
-    <div class="card"><div class="icon">🤖</div><h2>Bots cadastrados</h2><div class="value">02</div><p class="small">Dados de demonstração</p></div>
-    <div class="card"><div class="icon">⚡</div><h2>Status</h2><div class="value green">Online</div><p class="small">Estado visual de exemplo</p></div>
-    <div class="card"><div class="icon">◈</div><h2>CPU</h2><div class="value">--</div><p class="small">Servidor não conectado</p></div>
-    <div class="card"><div class="icon">▤</div><h2>Memória RAM</h2><div class="value">--</div><p class="small">Servidor não conectado</p></div>
+  <section class="page" id="page-bots">
+   <div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie os projetos cadastrados no painel.</p></div><button class="btn" onclick="addBot()">＋ Adicionar bot</button></div>
+   <div class="notice">Modo visual de demonstração: adicionar um bot salva apenas nesta sessão do navegador. A execução real exige o serviço de hospedagem integrado.</div>
+   <div class="card"><div class="cardhead"><h3>Suas hospedagens</h3><span id="bot-count" class="sub">0 projetos</span></div><div id="bot-list"><div class="empty">Nenhum bot cadastrado.<br><br>Use “Adicionar bot” para testar a interface.</div></div></div>
   </section>
-  <div class="tag" style="margin-top:30px">RECURSOS</div>
-  <section class="grid">
-    <div class="card"><div class="icon">▶</div><h2>Gerenciamento</h2><p class="small">Estrutura preparada para controles de bots.</p></div>
-    <div class="card"><div class="icon">⌘</div><h2>Console</h2><p class="small">Área planejada para acompanhar logs.</p></div>
-    <div class="card"><div class="icon">💎</div><h2>Planos</h2><p class="small">Estrutura para planos Free e Premium.</p></div>
-    <div class="card"><div class="icon">🔒</div><h2>Segurança</h2><p class="small">Backend seguro será implementado depois.</p></div>
+  <section class="page" id="page-console">
+   <div class="heading"><div><h1>Console</h1><p class="sub">Área de logs dos seus projetos.</p></div><button class="btn secondary" onclick="clearConsole()">Limpar console</button></div>
+   <div class="notice">Este console é demonstrativo. Ainda não recebe logs de processos reais.</div>
+   <div class="card"><div class="cardhead"><h3>Terminal VENIX</h3><span class="tag"><span class="dot"></span> Interface pronta</span></div><div class="console" id="consolelog">[VENIX] Painel carregado.<br>[INFO] Console de demonstração iniciado.<br>[INFO] Aguardando integração com o serviço de hospedagem.</div></div>
   </section>
+  <section class="page" id="page-plans">
+   <div class="heading"><div><h1>Planos</h1><p class="sub">Escolha uma opção para solicitar hospedagem.</p></div></div>
+   <div class="notice">Os valores abaixo são exemplos de interface, não ofertas ativas. Nenhum pagamento será cobrado nesta versão.</div>
+   <div class="plan-grid">
+    <div class="card plan"><span class="tag">INICIAL</span><h2>Starter</h2><p class="sub">Para começar a testar.</p><div class="price">R$ 0<small> / demonstração</small></div><ul><li>Projeto de demonstração</li><li>Painel básico</li><li>Controles visuais</li></ul><button class="btn secondary" style="width:100%" onclick="requestPlan('Starter')">Selecionar plano</button></div>
+    <div class="card plan" style="border-color:#8050b9"><span class="tag">POPULAR</span><h2>Pro</h2><p class="sub">Para projetos em crescimento.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li><li>Suporte a definir</li></ul><button class="btn" style="width:100%" onclick="requestPlan('Pro')">Solicitar informações</button></div>
+    <div class="card plan"><span class="tag">AVANÇADO</span><h2>Ultra</h2><p class="sub">Para mais recursos.</p><div class="price">A definir</div><ul><li>Recursos a definir</li><li>Limites a definir</li><li>Suporte a definir</li></ul><button class="btn secondary" style="width:100%" onclick="requestPlan('Ultra')">Solicitar informações</button></div>
+   </div>
+  </section>
+  <section class="page" id="page-payments">
+   <div class="heading"><div><h1>Pagamentos</h1><p class="sub">Pedidos e histórico financeiro.</p></div></div>
+   <div class="card"><div class="empty">▤<h3>Nenhum pagamento</h3><p>Os pagamentos via Pix ainda não estão configurados.</p><button class="btn" onclick="go('plans')">Ver planos</button></div></div>
+  </section>
+  <section class="page" id="page-account">
+   <div class="heading"><div><h1>Minha conta</h1><p class="sub">Informações do perfil.</p></div></div>
+   <div class="card" style="max-width:600px"><div class="avatar" style="width:52px;height:52px;font-size:20px">V</div><h3>Visitante</h3><p class="sub">Você está visualizando o painel sem autenticação.</p><div class="notice">Cadastro e login ainda não foram implementados. Não existe conta real nesta tela.</div><button class="btn" onclick="notify('Cadastro e login serão conectados ao backend na próxima etapa.')">Status da conta</button></div>
+  </section>
+  <section class="page" id="page-settings">
+   <div class="heading"><div><h1>Configurações</h1><p class="sub">Preferências locais do painel.</p></div></div>
+   <div class="card" style="max-width:650px"><h3>Aparência</h3><p class="sub">Tema atual: preto e roxo neon.</p><div class="field"><label>Nome exibido neste dispositivo</label><input id="display-name" placeholder="VENIX User" maxlength="40"></div><button class="btn" onclick="saveName()">Salvar preferência</button><div class="section-title">Sobre o painel</div><p class="sub">VENIX HOST · versão inicial da interface.</p><p class="sub">As preferências não são salvas na conta nem no servidor.</p></div>
+  </section>
+ </div>
+ <footer>VENIX HOST © 2026 · Painel em desenvolvimento</footer>
 </main>
-<footer>VENIX HOST © 2026 · FEITO PARA CRESCER</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const titles={dashboard:"Dashboard",bots:"Meus bots",console:"Console",plans:"Planos",payments:"Pagamentos",account:"Minha conta",settings:"Configurações"};
+let bots=[];
+function go(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===page));
+ const target=document.getElementById("page-"+page);
+ if(target)target.classList.add("active");
+ document.getElementById("crumb").textContent=titles[page]||"Dashboard";
+ document.getElementById("sidebar").classList.remove("open");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav").forEach(n=>n.addEventListener("click",()=>go(n.dataset.page)));
+document.getElementById("mobilemenu").addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+function notify(message){
+ const t=document.getElementById("toast");t.textContent=message;t.style.display="block";
+ clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display="none",3000);
+}
+function log(message){
+ const el=document.getElementById("consolelog");
+ el.innerHTML+="<br>"+escapeHtml(new Date().toLocaleTimeString())+" [INFO] "+escapeHtml(message);
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function addBot(){
+ const name=prompt("Nome do projeto/bot:");
+ if(!name||!name.trim())return;
+ if(bots.length>=10){notify("Limite de 10 projetos demonstrativos atingido.");return;}
+ bots.push({id:Date.now(),name:name.trim().slice(0,60),status:"Parado"});
+ renderBots();log("Projeto demonstrativo adicionado: "+name.trim());
+ notify("Projeto adicionado à demonstração.");
+}
+function actionBot(id,action){
+ const bot=bots.find(b=>b.id===id);if(!bot)return;
+ if(action==="delete"){
+  if(!confirm("Remover "+bot.name+" desta demonstração?"))return;
+  bots=bots.filter(b=>b.id!==id);log("Projeto removido: "+bot.name);
+ }else{
+  bot.status=action==="start"?"Em execução (simulado)":"Parado";
+  log((action==="start"?"Iniciar":"Parar")+" solicitado para "+bot.name+" (simulação)");
+  notify("Ação visual concluída; nenhum processo real foi iniciado.");
+ }
+ renderBots();
+}
+function renderBots(){
+ document.getElementById("stat-bots").textContent=bots.length;
+ document.getElementById("bot-count").textContent=bots.length+" projeto(s)";
+ const row=b=>`<div class="botrow"><div class="boticon">🤖</div><div class="botinfo"><b>${escapeHtml(b.name)}</b><small>${escapeHtml(b.status)}</small></div><div class="botactions"><button class="iconbtn" onclick="actionBot(${b.id},'start')">▶</button><button class="iconbtn" onclick="actionBot(${b.id},'stop')">■</button><button class="iconbtn" onclick="actionBot(${b.id},'delete')">✕</button></div></div>`;
+ const empty='<div class="empty">Nenhum bot cadastrado.<br><br>Use “Adicionar bot” para testar a interface.</div>';
+ document.getElementById("bot-list").innerHTML=bots.length?bots.map(row).join(""):empty;
+ document.getElementById("dashboard-bots").innerHTML=bots.length?bots.slice(0,3).map(row).join(""):'<div class="empty">▣<p>Você ainda não adicionou bots.</p><button class="btn" onclick="go(\'bots\')">Abrir meus bots</button></div>';
+}
+function clearConsole(){document.getElementById("consolelog").innerHTML="[INFO] Console limpo.";notify("Console demonstrativo limpo.");}
+function requestPlan(plan){notify("Plano "+plan+" selecionado apenas para demonstração.");log("Consulta demonstrativa do plano "+plan);}
+function saveName(){const n=document.getElementById("display-name").value.trim();if(!n){notify("Digite um nome primeiro.");return;}document.querySelector(".topright .avatar").textContent=n.slice(0,1).toUpperCase();notify("Nome aplicado somente nesta sessão.");}
+</script>
 </body>
 </html>
- 
