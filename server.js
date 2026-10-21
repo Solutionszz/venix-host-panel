@@ -1,4 +1,3 @@
-
 const express = require("express");
 const { Pool } = require("pg");
 const bcrypt = require("bcryptjs");
@@ -7,6 +6,12 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
+
+// Integração com a Silly Development (somente para testes com bots próprios)
+const SILLYDEV_API_KEY = process.env.SILLYDEV_API_KEY;
+const SILLYDEV_SERVER_ID = process.env.SILLYDEV_SERVER_ID || "58b1d33a";
+const SILLYDEV_ALLOWED_USERNAME = process.env.SILLYDEV_ALLOWED_USERNAME;
+const SILLYDEV_BASE_URL = "https://sillydev.co.uk/panel/api/client";
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -119,11 +124,118 @@ async function autenticar(req, res, next) {
   }
 }
 
+// Envia um sinal de energia ao servidor na Silly Development.
+// A chave nunca é registrada nem devolvida ao navegador.
+async function enviarSinal(signal) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const resposta = await fetch(
+      `${SILLYDEV_BASE_URL}/servers/${SILLYDEV_SERVER_ID}/power`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${SILLYDEV_API_KEY}`,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({ signal }),
+        signal: controller.signal
+      }
+    );
+
+    if (resposta.status === 204 || resposta.ok) {
+      return { ok: true };
+    }
+
+    let detalhe = "";
+    try {
+      const corpo = await resposta.json();
+      detalhe =
+        (corpo.errors && corpo.errors[0] && corpo.errors[0].detail) || "";
+    } catch (e) {
+      detalhe = "";
+    }
+
+    return { ok: false, status: resposta.status, detalhe };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// Cria a rota de ação (start, stop, restart) com checagem de dono
+function rotaDeEnergia(signal, mensagemOk) {
+  return async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      if (!/^\d+$/.test(id)) {
+        return res.status(400).json({
+          error: "ID de bot inválido."
+        });
+      }
+
+      const resultado = await pool.query(
+        `SELECT id FROM bots
+         WHERE id = $1 AND user_id = $2`,
+        [id, req.user.id]
+      );
+
+      if (!resultado.rows[0]) {
+        return res.status(404).json({
+          error: "Bot não encontrado."
+        });
+      }
+
+      // Só a conta de teste autorizada pode usar o executor
+      if (
+        !SILLYDEV_API_KEY ||
+        !SILLYDEV_ALLOWED_USERNAME ||
+        req.user.username !== SILLYDEV_ALLOWED_USERNAME
+      ) {
+        return res.status(503).json({
+          error: "Executor ainda não configurado.",
+          message:
+            "O bot foi cadastrado, mas falta conectar o ambiente de execução."
+        });
+      }
+
+      const envio = await enviarSinal(signal);
+
+      if (!envio.ok) {
+        console.error(
+          `Silly Development recusou "${signal}": HTTP ${envio.status} ${envio.detalhe}`
+        );
+
+        if (envio.status === 429) {
+          return res.status(429).json({
+            error: "Muitas solicitações. Tente novamente em instantes."
+          });
+        }
+
+        return res.status(502).json({
+          error: "O provedor recusou o comando.",
+          message: envio.detalhe || `Código ${envio.status}`
+        });
+      }
+
+      return res.json({ message: mensagemOk });
+    } catch (error) {
+      console.error(`Erro ao enviar "${signal}":`, error.message);
+
+      return res.status(502).json({
+        error: "Não foi possível falar com o provedor."
+      });
+    }
+  };
+}
+
 app.get("/", (req, res) => {
   res.json({
     name: "VENIX HOST API",
     status: "online",
-    version: "1.2.0"
+    version: "1.3.0"
   });
 });
 
@@ -430,85 +542,24 @@ app.delete("/api/bots/:id", autenticar, async (req, res) => {
   }
 });
 
-// EXECUÇÃO: exige um executor real conectado.
-// Não marca um bot como rodando sem iniciar um processo.
+// EXECUÇÃO: INICIAR, PARAR E REINICIAR
+// Cada rota confere o dono do bot antes de falar com o provedor.
 app.post(
   "/api/bots/:id/start",
   autenticar,
-  async (req, res) => {
-    try {
-      const id = req.params.id;
-
-      if (!/^\d+$/.test(id)) {
-        return res.status(400).json({
-          error: "ID de bot inválido."
-        });
-      }
-
-      const resultado = await pool.query(
-        `SELECT id FROM bots
-         WHERE id = $1 AND user_id = $2`,
-        [id, req.user.id]
-      );
-
-      if (!resultado.rows[0]) {
-        return res.status(404).json({
-          error: "Bot não encontrado."
-        });
-      }
-
-      return res.status(503).json({
-        error: "Executor ainda não configurado.",
-        message: "O bot foi cadastrado, mas falta conectar o ambiente de execução."
-      });
-    } catch (error) {
-      console.error("Erro ao iniciar bot:", error.message);
-
-      res.status(500).json({
-        error: "Não foi possível processar a solicitação."
-      });
-    }
-  }
+  rotaDeEnergia("start", "Comando de iniciar enviado.")
 );
 
-// PARAR: mesma exigência de executor real
 app.post(
   "/api/bots/:id/stop",
   autenticar,
-  async (req, res) => {
-    try {
-      const id = req.params.id;
+  rotaDeEnergia("stop", "Comando de parar enviado.")
+);
 
-      if (!/^\d+$/.test(id)) {
-        return res.status(400).json({
-          error: "ID de bot inválido."
-        });
-      }
-
-      const resultado = await pool.query(
-        `SELECT id FROM bots
-         WHERE id = $1 AND user_id = $2`,
-        [id, req.user.id]
-      );
-
-      if (!resultado.rows[0]) {
-        return res.status(404).json({
-          error: "Bot não encontrado."
-        });
-      }
-
-      return res.status(503).json({
-        error: "Executor ainda não configurado.",
-        message: "Não existe um processo de bot conectado para parar."
-      });
-    } catch (error) {
-      console.error("Erro ao parar bot:", error.message);
-
-      res.status(500).json({
-        error: "Não foi possível processar a solicitação."
-      });
-    }
-  }
+app.post(
+  "/api/bots/:id/restart",
+  autenticar,
+  rotaDeEnergia("restart", "Comando de reiniciar enviado.")
 );
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
