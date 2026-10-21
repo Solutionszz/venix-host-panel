@@ -5,10 +5,13 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL
     ? { rejectUnauthorized: false }
-    : false
+    : false,
+  max: 3
 });
 
-async function iniciarWorker() {
+let encerrando = false;
+
+async function prepararBanco() {
   if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL não configurada.");
   }
@@ -24,19 +27,50 @@ async function iniciarWorker() {
     )
   `);
 
-  console.log("[VENIX HOST] Executor iniciado.");
-  console.log("[VENIX HOST] Banco de dados conectado.");
-  console.log("[VENIX HOST] Tabela de logs preparada.");
+  console.log("[VENIX] Banco conectado.");
+  console.log("[VENIX] Sistema de logs preparado.");
+}
+
+async function verificarBanco() {
+  const resultado = await pool.query(
+    "SELECT NOW() AS horario"
+  );
+
   console.log(
-    "[VENIX HOST] Aguardando integração do ambiente isolado."
+    "[VENIX] Executor ativo:",
+    resultado.rows[0].horario
   );
 }
 
-iniciarWorker()
-  .catch((erro) => {
-    console.error("[VENIX HOST] Erro:", erro.message);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    await pool.end();
-  });
+async function iniciar() {
+  await prepararBanco();
+
+  while (!encerrando) {
+    try {
+      await verificarBanco();
+    } catch (erro) {
+      console.error(
+        "[VENIX] Erro de conexão:",
+        erro.message
+      );
+    }
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 30000)
+    );
+  }
+}
+
+async function encerrar() {
+  encerrando = true;
+  await pool.end();
+  process.exit(0);
+}
+
+process.on("SIGTERM", encerrar);
+process.on("SIGINT", encerrar);
+
+iniciar().catch((erro) => {
+  console.error("[VENIX] Falha ao iniciar:", erro);
+  process.exit(1);
+});
