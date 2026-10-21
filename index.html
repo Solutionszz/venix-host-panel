@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -149,7 +148,7 @@ footer{text-align:center;color:#666173;padding:25px;font-size:11px}
 
 <section class="page" id="page-bots">
   <div class="heading"><div><h1>Meus bots</h1><p class="sub">Gerencie seus projetos salvos na sua conta.</p></div><button class="btn" id="add-bot-button" onclick="addBot()">＋ Adicionar bot</button></div>
-  <div class="notice">Seus projetos são salvos no banco de dados. Iniciar e parar processos ainda depende da integração de execução.</div>
+  <div class="notice">Seus projetos são salvos no banco de dados. Iniciar, parar e reiniciar enviam o comando ao servidor de teste; o status real ainda não é lido.</div>
   <div class="card"><div class="cardhead"><h3>Seus projetos</h3><span id="bot-count">0 projetos</span></div><div id="bot-list" class="empty">Carregando bots...</div></div>
 </section>
 
@@ -234,7 +233,7 @@ async function apiRequest(path,options={}){
   }
   let data;
   try{data=await response.json();}catch{throw new Error("A API retornou uma resposta inválida.");}
-  if(!response.ok)throw new Error(data.error||data.message||"Não foi possível concluir a operação.");
+  if(!response.ok)throw new Error(data.message||data.error||"Não foi possível concluir a operação.");
   return data;
 }
 
@@ -439,17 +438,18 @@ async function actionBot(id,action){
     return;
   }
 
-  const endpoint=action==="start"?"start":"stop";
+  const endpoints={start:"start",stop:"stop",restart:"restart"};
+  const endpoint=endpoints[action];
+  if(!endpoint)return;
+
   try{
-    await apiRequest("/api/bots/"+encodeURIComponent(id)+"/"+endpoint,{method:"POST"});
+    const result=await apiRequest("/api/bots/"+encodeURIComponent(id)+"/"+endpoint,{method:"POST"});
     await loadBots();
-    notify(action==="start"?"Solicitação de início enviada.":"Solicitação de parada enviada.");
+    const msg=(result&&result.message)||"Comando enviado.";
+    notify(msg);
+    log(msg+" ("+bot.name+")");
   }catch(error){
-    if(/503|execução|ambiente|integrado|indisponível/i.test(error.message)){
-      notify("Cadastro funcionando; execução real ainda não está integrada.");
-    }else{
-      notify(error.message);
-    }
+    notify(error.message);
     log("Ação "+endpoint+" não concluída para "+bot.name+": "+error.message);
   }
 }
@@ -460,7 +460,7 @@ function renderBots(){
   $("stat-running").textContent=bots.filter(b=>String(b.status).toLowerCase()==="running").length;
 
   const row=b=>{
-    const id=JSON.stringify(String(b.id));
+    const id="'"+String(b.id).replace(/[^0-9]/g,"")+"'";
     const status=botStatus(b.status);
     return `<div class="botrow">
       <div class="boticon">🤖</div>
@@ -468,6 +468,7 @@ function renderBots(){
       <div class="botactions">
         <button class="iconbtn" title="Iniciar" onclick="actionBot(${id},'start')">▶</button>
         <button class="iconbtn" title="Parar" onclick="actionBot(${id},'stop')">■</button>
+        <button class="iconbtn" title="Reiniciar" onclick="actionBot(${id},'restart')">↻</button>
         <button class="iconbtn" title="Renomear" onclick="actionBot(${id},'rename')">✎</button>
         <button class="iconbtn" title="Excluir" onclick="actionBot(${id},'delete')">✕</button>
       </div>
